@@ -1,0 +1,18 @@
+version: '3.3'
+services:
+  got-that-db:
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_DATABASE: 'got-that-db'
+      MYSQL_USER: 'user'
+      MYSQL_PASSWORD: 'password'
+      MYSQL_ROOT_PASSWORD: 'password'
+    ports:
+      - '3306:3306'
+    volumes:
+      - ./sql-script/createDb.sql:/docker-entrypoint-initdb.d/createDb.sql
+    expose:
+      - '3306'
+volumes:
+  got-that-db:
