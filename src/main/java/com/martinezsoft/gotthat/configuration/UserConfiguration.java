@@ -1,6 +1,7 @@
 package com.martinezsoft.gotthat.configuration;
 
 import com.martinezsoft.gotthat.database.HibernateSessionFactory;
+import com.martinezsoft.gotthat.service.UserApiService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.context.annotation.RequestScope;
@@ -10,7 +11,7 @@ public class UserConfiguration {
 
     @Bean
     @RequestScope
-    public GotThatService gotThatService() throws Exception {return new GotThatService(hibernateSessionFactory());}
+    public UserApiService userService() throws Exception {return new UserApiService(hibernateSessionFactory());}
 
     @Bean
     @RequestScope

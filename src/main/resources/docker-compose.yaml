@@ -1,10 +1,10 @@
 version: '3.3'
 services:
-  got-that-db:
+  got-that-note-db:
     image: mysql:5.7
     restart: always
     environment:
-      MYSQL_DATABASE: 'got-that-db'
+      MYSQL_DATABASE: 'got-that-note-db'
       MYSQL_USER: 'user'
       MYSQL_PASSWORD: 'password'
       MYSQL_ROOT_PASSWORD: 'password'
@@ -15,4 +15,4 @@ services:
     expose:
       - '3306'
 volumes:
-  got-that-db:
+  got-that-note-db:

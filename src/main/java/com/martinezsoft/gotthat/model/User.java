@@ -10,7 +10,8 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "Users")
-class Users {
+public
+class User {
     @JsonProperty("UserId")
     @Id
     @Column(name = "USER_ID")
@@ -48,7 +49,7 @@ class Users {
         this.userPassword = userPassword;
     }
 
-    public Users(String id, String email, String userPassword) {
+    public User(String id, String email, String userPassword) {
         this.id = id;
         this.email = email;
         this.userPassword = userPassword;
@@ -57,11 +58,11 @@ class Users {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Users)) return false;
-        Users users = (Users) o;
-        return id.equals(users.id) &&
-                email.equals(users.email) &&
-                userPassword.equals(users.userPassword);
+        if (!(o instanceof User)) return false;
+        User user = (User) o;
+        return id.equals(user.id) &&
+                email.equals(user.email) &&
+                userPassword.equals(user.userPassword);
     }
 
     @Override
