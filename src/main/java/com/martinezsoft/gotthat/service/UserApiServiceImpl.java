@@ -14,11 +14,11 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/services/user")
-public class UserApiService implements ApiService {
+public class UserApiServiceImpl implements UserService {
     private HibernateSessionFactory hibernateSessionFactory;
     private Session userSession;
 
-    public UserApiService(HibernateSessionFactory hibernateSessionFactory) throws Exception{
+    public UserApiServiceImpl(HibernateSessionFactory hibernateSessionFactory) throws Exception{
         this.hibernateSessionFactory = hibernateSessionFactory;
         userSession = hibernateSessionFactory.buildSession();
     }
