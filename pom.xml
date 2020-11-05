@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.example</groupId>
+    <groupId>com.martinezsoft</groupId>
     <artifactId>Got_That</artifactId>
     <version>1.0-SNAPSHOT</version>
 
@@ -24,7 +24,6 @@
         <spring-data-jpa>2.3.3.RELEASE</spring-data-jpa>
         <mysql-connector-java>8.0.20</mysql-connector-java>
         <spring-boot-starter-data-mongodb>2.3.3.RELEASE</spring-boot-starter-data-mongodb>
-        <maven-compiler-plugin>3.8.1</maven-compiler-plugin>
     </properties>
 
     <dependencies>
@@ -59,11 +58,17 @@
             <artifactId>spring-boot-starter-data-mongodb</artifactId>
             <version>${spring-boot-starter-data-mongodb}</version>
         </dependency>
-        <dependency>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-compiler-plugin</artifactId>
-            <version>${maven-compiler-plugin}</version>
-        </dependency>
     </dependencies>
-
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 </project>

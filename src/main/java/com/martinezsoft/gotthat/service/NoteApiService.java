@@ -10,23 +10,21 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 
 
-public interface NoteApiService{
-
-    public NoteRepository noteRepository = null;
+/*public interface NoteApiService{
 
     @PostMapping(value = "/add", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<Note> addNote(@RequestBody Note note);
+    ResponseEntity<Note> addNote(@RequestBody Note note);
 
     @GetMapping(produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Note>> searchNotes();
+    ResponseEntity<List<Note>> searchNotes();
 
     @GetMapping(value = "/get", produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> lookup(@PathVariable String noteId);
+    ResponseEntity<String> lookup(@PathVariable String noteId);
 
     @PutMapping(value = "/update", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<Note> updateNote(@PathVariable String noteId,@RequestBody Note note);
+    ResponseEntity<Note> updateNote(@PathVariable String noteId,@RequestBody Note note);
 
     //after make deleted by date created dd/hh/ss
     @DeleteMapping(value = "/delete{id}",produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> deleteNote(@PathVariable String noteId);
-}
+    ResponseEntity<String> deleteNote(@PathVariable String noteId);
+}*/

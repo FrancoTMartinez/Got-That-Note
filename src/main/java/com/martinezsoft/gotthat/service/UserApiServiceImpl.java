@@ -1,7 +1,7 @@
 package com.martinezsoft.gotthat.service;
 
 import com.martinezsoft.gotthat.database.HibernateSessionFactory;
-import com.martinezsoft.gotthat.model.User;
+import com.martinezsoft.gotthat.model.Users;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 import org.springframework.http.HttpStatus;
@@ -12,8 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
-@RestController
-@RequestMapping(value = "/services/user")
+
 public class UserApiServiceImpl implements UserService {
     private HibernateSessionFactory hibernateSessionFactory;
     private Session userSession;
@@ -23,47 +22,47 @@ public class UserApiServiceImpl implements UserService {
         userSession = hibernateSessionFactory.buildSession();
     }
 
-    private User userReturnedFromDataBase (String id){
-        User userReturned;
+    private Users userReturnedFromDataBase (String id){
+        Users usersReturned;
         try{
             userSession.beginTransaction();
             Query selectQuery = userSession.createQuery("from Users WHERE USER_ID=:paramId");
             selectQuery.setParameter("paramId", id);
-            userReturned = (User) selectQuery.uniqueResult();
-            return userReturned;
+            usersReturned = (Users) selectQuery.uniqueResult();
+            return usersReturned;
         }catch(EntityNotFoundException e){
             throw new EntityNotFoundException(e.getMessage());
         }
     }
 
     @Override
-    public ResponseEntity<User> lookUp(String id) {
+    public ResponseEntity<Users> lookUp(String id) {
 
         return ResponseEntity.status(HttpStatus.OK).body(userReturnedFromDataBase(id));
     }
 
     @Override
-    public ResponseEntity<List<User>> search() {
+    public ResponseEntity<List<Users>> search() {
         userSession.beginTransaction();
-        List<User> userList = userSession.createQuery("from Users", User.class).list();
+        List<Users> usersList = userSession.createQuery("from Users", Users.class).list();
         userSession.getTransaction().commit();
-        return ResponseEntity.status(HttpStatus.OK).body(userList);
+        return ResponseEntity.status(HttpStatus.OK).body(usersList);
     }
 
     @Override
-    public ResponseEntity<User> add(User user) {
+    public ResponseEntity<Users> add(Users users) {
         userSession.beginTransaction();
-        userSession.save(user);
+        userSession.save(users);
         userSession.getTransaction().commit();
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(user);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(users);
     }
 
     @Override
-    public ResponseEntity<User> update(String id, User user) {
-        User userReturned = userReturnedFromDataBase(id);
-        userReturned.setEmail(user.getEmail());
-        userReturned.setUserPassword(user.getUserPassword());
-        return ResponseEntity.status(HttpStatus.OK).body(userReturned);
+    public ResponseEntity<Users> update(String id, Users users) {
+        Users usersReturned = userReturnedFromDataBase(id);
+        usersReturned.setEmail(users.getEmail());
+        usersReturned.setUserPassword(users.getUserPassword());
+        return ResponseEntity.status(HttpStatus.OK).body(usersReturned);
     }
 
     @Override

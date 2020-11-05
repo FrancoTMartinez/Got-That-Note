@@ -1,17 +1,17 @@
-package com.martinezsoft.gotthat.service;
+/*package com.martinezsoft.gotthat.service;
 
 import com.martinezsoft.gotthat.model.Note;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.repository.support.SimpleMongoRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Collections;
 import java.util.List;
-
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import java.util.Optional;
 
 @Service
 @RestController
@@ -20,35 +20,42 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class NoteApiServiceImpl implements NoteApiService{
 
     @Autowired
-    private NoteRepository noteRepository;
+    public SimpleMongoRepository simpleMongoRepository;
+
+    public NoteApiServiceImpl(SimpleMongoRepository simpleMongoRepository) {
+
+    }
 
 
     @Override
     public ResponseEntity<Note> addNote(Note note) {
-        noteRepository.save(note);
+        simpleMongoRepository.save(note);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(note);
     }
 
     @Override
     public ResponseEntity<List<Note>> searchNotes() {
-        List<Note> noteList = noteRepository.findAll();
+        List<Note> noteList = simpleMongoRepository.findAll();
         return ResponseEntity.status(HttpStatus.OK).body(noteList);
     }
 
     @Override
     public ResponseEntity<String> lookup(String noteId) {
-        noteRepository.findById(noteId);
+        simpleMongoRepository.findAllById(Collections.singleton(noteId));
         return ResponseEntity.status(HttpStatus.OK).body(noteId);
     }
 
     @Override
     public ResponseEntity<Note> updateNote(String noteId, Note note) {
-        Note newNote = (Note) noteRepository.existsById(note.noteId);
-        return null;
+        Optional newNote = simpleMongoRepository.findById(noteId);
+        Note note1 = (Note) simpleMongoRepository.save(newNote);
+        return ResponseEntity.status(HttpStatus.OK).body(note1);
     }
 
     @Override
     public ResponseEntity<String> deleteNote(String noteId) {
-        return null;
+        simpleMongoRepository.delete(noteId);
+        return ResponseEntity.status(HttpStatus.OK).body("Note deleted");
     }
 }
+*/
