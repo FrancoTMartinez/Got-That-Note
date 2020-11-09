@@ -62,6 +62,8 @@ public class UserApiServiceImpl implements UserService {
         Users usersReturned = userReturnedFromDataBase(id);
         usersReturned.setEmail(users.getEmail());
         usersReturned.setUserPassword(users.getUserPassword());
+        userSession.update(users);
+        userSession.getTransaction().commit();
         return ResponseEntity.status(HttpStatus.OK).body(usersReturned);
     }
 

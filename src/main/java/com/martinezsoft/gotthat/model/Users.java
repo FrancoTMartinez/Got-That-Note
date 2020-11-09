@@ -49,6 +49,8 @@ class Users {
         this.userPassword = userPassword;
     }
 
+    public Users(){}
+
     public Users(String id, String email, String userPassword) {
         this.id = id;
         this.email = email;
