@@ -1,16 +1,30 @@
 package com.martinezsoft.gotthat.model;
 
-import org.springframework.data.mongodb.core.mapping.Document;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.Objects;
 
-@Document(collation = "notes")
+
+@Entity
+@Table(name = "Note")
 public class Note {
+    @JsonProperty("noteId")
     @Id
-    public String noteId;
+    @Column(name = "NOTE_ID")
+    public String noteId= null;
+
+    @JsonProperty("title")
+    @Column(name = "TITTLE")
     private String title;
+
+    @JsonProperty("text")
+    @Column(name = "TEXT")
     private String text;
+
     private String creationDate = new String();
 
     public Note(Note note) {

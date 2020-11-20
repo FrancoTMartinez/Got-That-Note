@@ -1,61 +1,76 @@
-/*package com.martinezsoft.gotthat.service;
+package com.martinezsoft.gotthat.service;
 
+import com.martinezsoft.gotthat.database.HibernateSessionFactory;
 import com.martinezsoft.gotthat.model.Note;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.repository.support.SimpleMongoRepository;
+import com.martinezsoft.gotthat.model.Users;
+import org.hibernate.Session;
+import org.hibernate.query.Query;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Collections;
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
-import java.util.Optional;
 
-@Service
-@RestController
-@RequestMapping(value = "/services/user{id}/note")
 
 public class NoteApiServiceImpl implements NoteApiService{
 
-    @Autowired
-    public SimpleMongoRepository simpleMongoRepository;
+    private HibernateSessionFactory hibernateSessionFactory;
+    private Session userSession;
 
-    public NoteApiServiceImpl(SimpleMongoRepository simpleMongoRepository) {
-
+    public NoteApiServiceImpl(HibernateSessionFactory hibernateSessionFactory) throws Exception{
+        this.hibernateSessionFactory = hibernateSessionFactory;
+        userSession = hibernateSessionFactory.buildSession();
     }
 
+    private Note noteReturnedFromDataBase (String id){
+        Note notesReturned;
+        try{
+            userSession.beginTransaction();
+            Query selectQuery = userSession.createQuery("from Notes WHERE USER_ID=:paramId");
+            selectQuery.setParameter("paramId", id);
+            notesReturned = (Note) selectQuery.uniqueResult();
+            return notesReturned;
+        }catch(EntityNotFoundException e){
+            throw new EntityNotFoundException(e.getMessage());
+        }
+    }
 
     @Override
-    public ResponseEntity<Note> addNote(Note note) {
-        simpleMongoRepository.save(note);
+    public ResponseEntity<Note> addNote(Note note, Users user) {
+        userSession.beginTransaction();
+        //note.setNoteId(user.getUserId());
+        userSession.save(note);
+        userSession.getTransaction().commit();
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(note);
     }
 
     @Override
     public ResponseEntity<List<Note>> searchNotes() {
-        List<Note> noteList = simpleMongoRepository.findAll();
+        userSession.beginTransaction();
+        List<Note> noteList = userSession.createQuery("from Notes", Note.class).list();
+        userSession.getTransaction().commit();
         return ResponseEntity.status(HttpStatus.OK).body(noteList);
     }
 
     @Override
-    public ResponseEntity<String> lookup(String noteId) {
-        simpleMongoRepository.findAllById(Collections.singleton(noteId));
-        return ResponseEntity.status(HttpStatus.OK).body(noteId);
+    public ResponseEntity<Note> lookup(String noteId) {
+        return ResponseEntity.status(HttpStatus.OK).body(noteReturnedFromDataBase(noteId));
     }
 
     @Override
     public ResponseEntity<Note> updateNote(String noteId, Note note) {
-        Optional newNote = simpleMongoRepository.findById(noteId);
-        Note note1 = (Note) simpleMongoRepository.save(newNote);
-        return ResponseEntity.status(HttpStatus.OK).body(note1);
+        Note notesReturned = noteReturnedFromDataBase(noteId);
+        notesReturned.setTitle(note.getTitle());
+        notesReturned.setText(note.getText());
+        userSession.update(note);
+        userSession.getTransaction().commit();
+        return ResponseEntity.status(HttpStatus.OK).body(notesReturned);
     }
 
     @Override
     public ResponseEntity<String> deleteNote(String noteId) {
-        simpleMongoRepository.delete(noteId);
+        userSession.delete(noteReturnedFromDataBase(noteId));
+        userSession.getTransaction().commit();
         return ResponseEntity.status(HttpStatus.OK).body("Note deleted");
     }
 }
-*/
