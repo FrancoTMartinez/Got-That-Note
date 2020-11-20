@@ -1,6 +1,6 @@
 package com.martinezsoft.gotthat.service;
 
-import com.martinezsoft.gotthat.model.Note;
+import com.martinezsoft.gotthat.model.Notes;
 import com.martinezsoft.gotthat.model.Users;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -16,16 +16,16 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public interface NoteApiService{
 
     @PostMapping(value = "/add", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
-    ResponseEntity<Note> addNote(@RequestBody Note note, @RequestBody Users users);
+    ResponseEntity<Notes> addNote(@RequestBody Notes notes, @RequestParam String userId);
 
     @GetMapping(produces = APPLICATION_JSON_VALUE)
-    ResponseEntity<List<Note>> searchNotes();
+    ResponseEntity<List<Notes>> searchNotes();
 
     @GetMapping(value = "/get", produces = APPLICATION_JSON_VALUE)
-    ResponseEntity<Note> lookup(@PathVariable String noteId);
+    ResponseEntity<Notes> lookup(@PathVariable String noteId);
 
     @PutMapping(value = "/update", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
-    ResponseEntity<Note> updateNote(@PathVariable String noteId,@RequestBody Note note);
+    ResponseEntity<Notes> updateNote(@PathVariable String noteId, @RequestBody Notes notes);
 
     //after make deleted by date created dd/hh/ss
     @DeleteMapping(value = "/delete/{id}",produces = APPLICATION_JSON_VALUE)
