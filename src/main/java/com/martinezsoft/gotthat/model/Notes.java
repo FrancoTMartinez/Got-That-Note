@@ -18,7 +18,7 @@ public class Notes {
     @Column(name = "NOTE_ID")
     public String noteId= null;
 
-    @JsonProperty("user_id")
+    @JsonProperty("userId")
     @Column(name = "USER_ID")
     public String userID= null;
 
@@ -77,7 +77,7 @@ public class Notes {
         this.creationDate = creationDate;
     }
 
-    public Notes(Notes notes) {}
+    public Notes(Notes notes){}
 
     public Notes(String noteId, String title, String text, String creationDate) {
         this.noteId = noteId;
