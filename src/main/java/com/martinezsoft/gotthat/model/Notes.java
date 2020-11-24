@@ -10,7 +10,7 @@ import java.util.Objects;
 
 
 @Entity
-@Table(name = "Note")
+@Table(name = "Notes")
 public class Notes {
 
     @JsonProperty("noteId")
@@ -31,7 +31,6 @@ public class Notes {
     private String text;
 
     private String creationDate = new String();
-
 
     public String getNoteId() {
         return noteId;
@@ -77,7 +76,7 @@ public class Notes {
         this.creationDate = creationDate;
     }
 
-    public Notes(Notes notes){}
+    public Notes(){}
 
     public Notes(String noteId, String title, String text, String creationDate) {
         this.noteId = noteId;
