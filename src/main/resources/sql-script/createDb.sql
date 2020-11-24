@@ -6,9 +6,10 @@ CREATE TABLE Users (
 );
 CREATE TABLE Notes (
 	Id integer(11) NOT NULL AUTO_INCREMENT,
-	USER_ID varchar(11) NOT NULL,
+	USER_ID integer(11) NOT NULL,
 	TITTLE varchar(11),
 	TEXT varchar(350) NOT NULL,
-	PRIMARY KEY (Id)
+	PRIMARY KEY (Id),
+	FOREIGN KEY (USER_ID) REFERENCES Users(Id)
 );
 
