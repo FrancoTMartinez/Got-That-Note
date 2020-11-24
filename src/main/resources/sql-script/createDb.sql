@@ -1,12 +1,14 @@
 CREATE TABLE Users (
-    USER_ID varchar(11) NOT NULL AUTO_INCREMENT,
+    Id integer(11) NOT NULL AUTO_INCREMENT,
     EMAIL varchar(50) NOT NULL,
-    USER_PASSWORD varchar(50) NOT NULL
+    USER_PASSWORD varchar(50) NOT NULL,
+    PRIMARY KEY (Id)
 );
 CREATE TABLE Notes (
-	NOTE_ID varchar(11) NOT NULL AUTO_INCREMENT,
+	Id integer(11) NOT NULL AUTO_INCREMENT,
 	USER_ID varchar(11) NOT NULL,
 	TITTLE varchar(11),
 	TEXT varchar(350) NOT NULL,
+	PRIMARY KEY (Id)
 );
 

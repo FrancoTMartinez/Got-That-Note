@@ -15,7 +15,6 @@ public class Notes {
 
     @JsonProperty("noteId")
     @Id
-    @Column(name = "NOTE_ID")
     public String noteId= null;
 
     @JsonProperty("userId")
