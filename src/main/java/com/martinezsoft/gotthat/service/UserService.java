@@ -13,7 +13,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public interface UserService {
 
     @GetMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
-    ResponseEntity<Users> lookUp(@PathVariable String id); //all users
+    ResponseEntity<Users> lookUp(@PathVariable Integer id); //all users
 
     @GetMapping(produces = APPLICATION_JSON_VALUE)
     ResponseEntity<List<Users>> search();
@@ -22,9 +22,9 @@ public interface UserService {
     ResponseEntity <Users> add(@RequestBody Users users);
 
     @PutMapping(value = "/update/{id}", produces = APPLICATION_JSON_VALUE, consumes = APPLICATION_JSON_VALUE)
-    ResponseEntity<Users> update(@PathVariable String id, @RequestBody Users users);
+    ResponseEntity<Users> update(@PathVariable Integer id, @RequestBody Users users);
 
     @DeleteMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
-    ResponseEntity<String> delete(@PathVariable String id);
+    ResponseEntity<String> delete(@PathVariable Integer id);
 
 }

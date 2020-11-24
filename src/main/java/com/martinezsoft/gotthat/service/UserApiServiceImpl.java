@@ -20,11 +20,11 @@ public class UserApiServiceImpl implements UserService {
         userSession = hibernateSessionFactory.buildSession();
     }
 
-    private Users userReturnedFromDataBase (String id){
+    private Users userReturnedFromDataBase (Integer id){
         Users usersReturned;
         try{
             userSession.beginTransaction();
-            Query selectQuery = userSession.createQuery("from Users WHERE USER_ID=:paramId");
+            Query selectQuery = userSession.createQuery("from Users WHERE Id=:paramId");
             selectQuery.setParameter("paramId", id);
             usersReturned = (Users) selectQuery.uniqueResult();
             return usersReturned;
@@ -34,8 +34,7 @@ public class UserApiServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<Users> lookUp(String id) {
-
+    public ResponseEntity<Users> lookUp(Integer id) {
         return ResponseEntity.status(HttpStatus.OK).body(userReturnedFromDataBase(id));
     }
 
@@ -56,7 +55,7 @@ public class UserApiServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<Users> update(String id, Users users) {
+    public ResponseEntity<Users> update(Integer id, Users users) {
         Users usersReturned = userReturnedFromDataBase(id);
         usersReturned.setEmail(users.getEmail());
         usersReturned.setUserPassword(users.getUserPassword());
@@ -66,7 +65,7 @@ public class UserApiServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<String> delete(String id) {
+    public ResponseEntity<String> delete(Integer id) {
         userSession.delete(userReturnedFromDataBase(id));
         userSession.getTransaction().commit();
         return ResponseEntity.status(HttpStatus.OK).body("User deleted");

@@ -10,11 +10,10 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "Users")
-public
-class Users {
-    @JsonProperty("userId")
+public class Users {
+    @JsonProperty("id")
     @Id
-    private String UserId = null;
+    private Integer id = null;
 
     @JsonProperty("email")
     @Column(name = "EMAIL")
@@ -24,12 +23,12 @@ class Users {
     @Column(name = "USER_PASSWORD")
     private String userPassword = null;
 
-    public String getUserId() {
-        return UserId;
+    public Integer getid() {
+        return id;
     }
 
-    public void setUserId(String userId) {
-        this.UserId = userId;
+    public void setid(Integer id) {
+        this.id = id;
     }
 
     public String getEmail() {
@@ -50,8 +49,8 @@ class Users {
 
     public Users(){}
 
-    public Users(String UserId, String email, String userPassword) {
-        this.UserId = UserId;
+    public Users(Integer id, String email, String userPassword) {
+        this.id = id;
         this.email = email;
         this.userPassword = userPassword;
     }
@@ -61,20 +60,20 @@ class Users {
         if (this == o) return true;
         if (!(o instanceof Users)) return false;
         Users users = (Users) o;
-        return UserId.equals(users.UserId) &&
+        return id.equals(users.id) &&
                 email.equals(users.email) &&
                 userPassword.equals(users.userPassword);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(UserId, email, userPassword);
+        return Objects.hash(id, email, userPassword);
     }
 
     @Override
     public String toString() {
         return "Users{" +
-                "UserId='" + UserId + '\'' +
+                "id='" + id + '\'' +
                 ", email='" + email + '\'' +
                 ", userPassword='" + userPassword + '\'' +
                 '}';

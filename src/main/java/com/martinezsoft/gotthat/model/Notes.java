@@ -13,30 +13,29 @@ import java.util.Objects;
 @Table(name = "Notes")
 public class Notes {
 
-    @JsonProperty("noteId")
+    @JsonProperty("id")
     @Id
-    public String noteId= null;
+    public Integer id= null;
 
     @JsonProperty("userId")
     @Column(name = "USER_ID")
-    public String userID= null;
+    public Integer userId= null;
 
     @JsonProperty("title")
-    @Column(name = "TITTLE")
+    @Column(name = "TITLE")
     private String title;
 
     @JsonProperty("text")
     @Column(name = "TEXT")
     private String text;
 
-    private String creationDate = new String();
 
-    public String getNoteId() {
-        return noteId;
+    public Integer getid() {
+        return id;
     }
 
-    public void setNoteId(String noteId) {
-        this.noteId = noteId;
+    public void setid(Integer id) {
+        this.id = id;
     }
 
     public String getTitle() {
@@ -55,48 +54,35 @@ public class Notes {
         this.text = text;
     }
 
-    public String getCreationDate() {
-        return creationDate;
+
+    public Integer getUserId() {
+        return userId;
     }
 
-    public String getUserID() {
-        return userID;
-    }
-
-    public void setUserID(String userID) {
-        this.userID = userID;
-    }
-
-    public Notes(String userID) {
-        this.userID = userID;
-    }
-
-    public void setCreationDate(String creationDate) {
-        this.creationDate = creationDate;
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
     public Notes(){}
 
-    public Notes(String noteId, String title, String text, String creationDate) {
-        this.noteId = noteId;
+    public Notes(Integer id, String title, String text) {
+        this.id = id;
         this.title = title;
         this.text = text;
-        this.creationDate = creationDate;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getNoteId(), getTitle(), getText(), getCreationDate());
+        return Objects.hash(getid(), getTitle(), getText());
     }
 
     @Override
     public String toString() {
         return "Notes{" +
-                "noteId='" + noteId + '\'' +
-                ", userID='" + userID + '\'' +
+                "id='" + id + '\'' +
+                ", userId='" + userId + '\'' +
                 ", title='" + title + '\'' +
                 ", text='" + text + '\'' +
-                ", creationDate='" + creationDate + '\'' +
                 '}';
     }
 
@@ -105,11 +91,10 @@ public class Notes {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Notes notes = (Notes) o;
-        return noteId.equals(notes.noteId) &&
-                userID.equals(notes.userID) &&
+        return id.equals(notes.id) &&
+                userId.equals(notes.userId) &&
                 title.equals(notes.title) &&
-                text.equals(notes.text) &&
-                creationDate.equals(notes.creationDate);
+                text.equals(notes.text);
     }
 
 

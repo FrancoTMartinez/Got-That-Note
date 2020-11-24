@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.criteria.CriteriaBuilder;
 import java.util.List;
 
 
@@ -22,11 +23,11 @@ public class NoteApiServiceImpl implements NoteApiService{
         noteSession = hibernateSessionFactory.buildSession();
     }
 
-    private Notes noteReturnedFromDataBase (String id){
+    private Notes noteReturnedFromDataBase (Integer id){
         Notes notesReturned;
         try{
             noteSession.beginTransaction();
-            Query selectQuery = noteSession.createQuery("from Notes WHERE USER_ID=:paramId");
+            Query selectQuery = noteSession.createQuery("from Notes WHERE Id=:paramId");
             selectQuery.setParameter("paramId", id);
             notesReturned = (Notes) selectQuery.uniqueResult();
             return notesReturned;
@@ -36,9 +37,8 @@ public class NoteApiServiceImpl implements NoteApiService{
     }
 
     @Override
-    public ResponseEntity<Notes> addNote(Notes notes, String userId) {
+    public ResponseEntity<Notes> addNote(Notes notes) {
         noteSession.beginTransaction();
-        notes.setUserID(userId);
         noteSession.save(notes);
         noteSession.getTransaction().commit();
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(notes);
@@ -53,13 +53,13 @@ public class NoteApiServiceImpl implements NoteApiService{
     }
 
     @Override
-    public ResponseEntity<Notes> lookup(String noteId) {
-        return ResponseEntity.status(HttpStatus.OK).body(noteReturnedFromDataBase(noteId));
+    public ResponseEntity<Notes> lookup(Integer id) {
+        return ResponseEntity.status(HttpStatus.OK).body(noteReturnedFromDataBase(id));
     }
 
     @Override
-    public ResponseEntity<Notes> updateNote(String noteId, Notes notes) {
-        Notes notesReturned = noteReturnedFromDataBase(noteId);
+    public ResponseEntity<Notes> updateNote(Integer id, Notes notes) {
+        Notes notesReturned = noteReturnedFromDataBase(id);
         notesReturned.setTitle(notes.getTitle());
         notesReturned.setText(notes.getText());
         noteSession.update(notes);
@@ -68,8 +68,8 @@ public class NoteApiServiceImpl implements NoteApiService{
     }
 
     @Override
-    public ResponseEntity<String> deleteNote(String noteId) {
-        noteSession.delete(noteReturnedFromDataBase(noteId));
+    public ResponseEntity<String> deleteNote(Integer id) {
+        noteSession.delete(noteReturnedFromDataBase(id));
         noteSession.getTransaction().commit();
         return ResponseEntity.status(HttpStatus.OK).body("Note deleted");
     }
