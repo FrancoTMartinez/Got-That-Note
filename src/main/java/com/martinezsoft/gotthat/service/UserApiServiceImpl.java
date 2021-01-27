@@ -33,6 +33,7 @@ public class UserApiServiceImpl implements UserService {
         }
     }
 
+
     @Override
     public ResponseEntity<Users> lookUp(Integer id) {
         return ResponseEntity.status(HttpStatus.OK).body(userReturnedFromDataBase(id));
@@ -70,4 +71,6 @@ public class UserApiServiceImpl implements UserService {
         userSession.getTransaction().commit();
         return ResponseEntity.status(HttpStatus.OK).body("User deleted");
     }
+
+
 }

@@ -10,20 +10,32 @@ import java.awt.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.mockito.Mockito.when;
-
+@SpringBootTest(clases = GotThatApp.class)
+@AutoConfigureMockMvc
 public class UserServiceTest {
 
+    @MockBean
+    private UserApiServiceImpl userApiServiceImpl;
+
+    @Autowire
+    private Mock mvc;
+
     @Test
-    public void WhenPostingAUserShouldReturnOk() throws Exception{
+    public void WhenPostingAUserShouldReturnAccepted() throws Exception{
         Path file = Paths.get("userExample.json");
         String body = Files.readString(file);
 
-        List<Users> users = new ArrayList();
 
-        when(UserApiServiceImpl.add(users)).thenReturn(users);
+        when(userApiServiceImpl.add(users).thenReturn(users);
+
+        MvcResult mvcResult = mvc.perfom(
+                MockMvcRequestBuilders.post("/services/user/add").contentType(MediaType.APPLICATION_JSON).content(body)
+                    .accept(MediaType.APPLICATION_JSON)).andExpect(MockMvcResultMatchers.status().isAccepted())
+                .andReturn();
+
+            assertEquals(HttpStatus.ACCEPTED.value(), mvcResult.getResponse().getStatus(202));
+        )
     }
 }
