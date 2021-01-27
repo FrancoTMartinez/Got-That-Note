@@ -52,7 +52,7 @@ public class UserApiServiceImpl implements UserService {
         userSession.beginTransaction();
         userSession.save(users);
         userSession.getTransaction().commit();
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(users);
+        return ResponseEntity.status(HttpStatus.OK).body(users);
     }
 
     @Override
