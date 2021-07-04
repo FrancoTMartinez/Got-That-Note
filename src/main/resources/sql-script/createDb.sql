@@ -1,3 +1,4 @@
+USE got-that-note-db
 CREATE TABLE Users (
     Id integer(11) NOT NULL AUTO_INCREMENT,
     EMAIL varchar(50) NOT NULL,

@@ -1,16 +1,13 @@
 package com.martinezsoft.gotthat.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
 import java.util.Objects;
 
 
-@Entity
-@Table(name = "Notes")
+@Document(collection = "Notes")
 public class Notes {
 
     @JsonProperty("id")
@@ -18,15 +15,12 @@ public class Notes {
     public Integer id= null;
 
     @JsonProperty("userId")
-    @Column(name = "USER_ID")
     public Integer userId= null;
 
     @JsonProperty("title")
-    @Column(name = "TITLE")
     private String title;
 
     @JsonProperty("text")
-    @Column(name = "TEXT")
     private String text;
 
 

@@ -1,76 +1,95 @@
 package com.martinezsoft.gotthat.service;
 
-import com.martinezsoft.gotthat.database.HibernateSessionFactory;
 import com.martinezsoft.gotthat.model.Notes;
-import com.martinezsoft.gotthat.model.Users;
-import org.hibernate.Session;
-import org.hibernate.query.Query;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
-import javax.persistence.criteria.CriteriaBuilder;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
-public class NoteApiServiceImpl implements NoteApiService{
+@RestController
+@CrossOrigin(origins = "http://localhost:8081")
+@RequestMapping(value = "/services/notes")
+public class NoteApiServiceImpl{
 
-    private HibernateSessionFactory hibernateSessionFactory;
-    private Session noteSession;
+    @Autowired
+    NoteApiService noteApiService;
 
-    public NoteApiServiceImpl(HibernateSessionFactory hibernateSessionFactory) throws Exception{
-        this.hibernateSessionFactory = hibernateSessionFactory;
-        noteSession = hibernateSessionFactory.buildSession();
+    @PostMapping(value = "/add", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+    ResponseEntity<Notes> addNote(@RequestBody Notes notes) {
+       try{
+           noteApiService.save(notes);
+           return ResponseEntity.status(HttpStatus.CREATED).body(notes);
+       }catch (EntityNotFoundException e){
+           throw new EntityNotFoundException(e.getMessage());
+       }
     }
 
-    private Notes noteReturnedFromDataBase (Integer id){
-        Notes notesReturned;
+    @GetMapping(produces = APPLICATION_JSON_VALUE)
+    ResponseEntity<List<Notes>> searchNotes() {
         try{
-            noteSession.beginTransaction();
-            Query selectQuery = noteSession.createQuery("from Notes WHERE Id=:paramId");
-            selectQuery.setParameter("paramId", id);
-            notesReturned = (Notes) selectQuery.uniqueResult();
-            return notesReturned;
-        }catch(EntityNotFoundException e){
+            List<Notes> notesList= new ArrayList<Notes>();
+            noteApiService.findAll().forEach(notesList::add); //preguntar lo de los dos puntitos
+            if(notesList.isEmpty()){
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).body(notesList);
+            }
+            return ResponseEntity.status(HttpStatus.OK).body(notesList);
+        }catch (EntityNotFoundException e){
             throw new EntityNotFoundException(e.getMessage());
         }
     }
 
-    @Override
-    public ResponseEntity<Notes> addNote(Notes notes) {
-        noteSession.beginTransaction();
-        noteSession.save(notes);
-        noteSession.getTransaction().commit();
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(notes);
+    @GetMapping(value = "/get/{idNote}", produces = APPLICATION_JSON_VALUE)
+    ResponseEntity<Notes> lookup(@PathVariable Integer id) {
+        String idNoteStr= String.valueOf(id);
+        Optional<Notes> notesId= noteApiService.findById(idNoteStr); //preguntar Optional porque? puede o no contener un null?
+
+        if(notesId.isPresent()){
+            return ResponseEntity.status(HttpStatus.OK).body(notesId.get());
+        }else{
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
     }
 
-    @Override
-    public ResponseEntity<List<Notes>> searchNotes() {
-        noteSession.beginTransaction();
-        List<Notes> notesList = noteSession.createQuery("from Notes", Notes.class).list();
-        noteSession.getTransaction().commit();
-        return ResponseEntity.status(HttpStatus.OK).body(notesList);
+    @PutMapping(value = "/update", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+    ResponseEntity<Notes> updateNote(@PathVariable Integer id, @RequestBody Notes notes) {
+        String idNoteStr= String.valueOf(id);
+        Optional<Notes> notesId= noteApiService.findById(idNoteStr);
+
+        if(notesId.isPresent()){
+            Notes noteToUpdate = notesId.get();
+            noteToUpdate.setText(notes.getText());
+            noteToUpdate.setTitle(notes.getTitle());
+
+            noteApiService.save(noteToUpdate);
+            return ResponseEntity.status(HttpStatus.CREATED).body(noteToUpdate);
+
+        }else{
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
     }
 
-    @Override
-    public ResponseEntity<Notes> lookup(Integer id) {
-        return ResponseEntity.status(HttpStatus.OK).body(noteReturnedFromDataBase(id));
+    //after make deleted by date created dd/hh/ss
+    @DeleteMapping(value = "/delete/{id}", produces = APPLICATION_JSON_VALUE)
+    ResponseEntity<String> deleteNote(@PathVariable Integer id) {
+
+        String idNoteStr= String.valueOf(id);
+        Optional<Notes> notesId= noteApiService.findById(idNoteStr);
+
+        if(notesId.isPresent()){
+
+            noteApiService.deleteById(idNoteStr);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+
+        }else{
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
     }
 
-    @Override
-    public ResponseEntity<Notes> updateNote(Integer id, Notes notes) {
-        Notes notesReturned = noteReturnedFromDataBase(id);
-        notesReturned.setTitle(notes.getTitle());
-        notesReturned.setText(notes.getText());
-        noteSession.update(notes);
-        noteSession.getTransaction().commit();
-        return ResponseEntity.status(HttpStatus.OK).body(notesReturned);
-    }
-
-    @Override
-    public ResponseEntity<String> deleteNote(Integer id) {
-        noteSession.delete(noteReturnedFromDataBase(id));
-        noteSession.getTransaction().commit();
-        return ResponseEntity.status(HttpStatus.OK).body("Note deleted");
-    }
 }
