@@ -7,12 +7,14 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="Got That" />
+        <module name="Got-That-Note" />
       </profile>
     </annotationProcessing>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="Got That" options="-parameters" />
+      <module name="Got-That-Note" options="-parameters" />
     </option>
   </component>
 </project>

@@ -4,7 +4,7 @@ services:
     image: mysql:5.7
     restart: always
     environment:
-      MYSQL_DATABASE: 'got-that-note-db'
+      MYSQL_DATABASE: 'got-that-note-db-MySql'
       MYSQL_USER: 'user'
       MYSQL_PASSWORD: 'password'
       MYSQL_ROOT_PASSWORD: 'password'
@@ -16,3 +16,17 @@ services:
       - '3306'
 volumes:
   got-that-note-db:
+  
+   mongo:
+      image: mongo
+      restart: always
+      environment:
+      	 MONGO_INITDB_DATABASE: notesDB-MongoDB
+         MONGO_INITDB_ROOT_USERNAME: user
+         MONGO_INITDB_ROOT_PASSWORD: password
+      ports:
+         - 27017:27017
+      volumes:
+         -  ~/mongo/data:/data/db
+volumes:
+   mongo-data:

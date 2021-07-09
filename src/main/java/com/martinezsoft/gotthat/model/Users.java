@@ -10,26 +10,24 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "Users")
-public
-class User {
-    @JsonProperty("UserId")
+public class Users {
+    @JsonProperty("id")
     @Id
-    @Column(name = "USER_ID")
-    private String id = null;
+    private Integer id = null;
 
-    @JsonProperty("Email")
+    @JsonProperty("email")
     @Column(name = "EMAIL")
     private String email = null;
 
-    @JsonProperty("Password")
+    @JsonProperty("password")
     @Column(name = "USER_PASSWORD")
     private String userPassword = null;
 
-    public String getId() {
+    public Integer getid() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setid(Integer id) {
         this.id = id;
     }
 
@@ -49,7 +47,9 @@ class User {
         this.userPassword = userPassword;
     }
 
-    public User(String id, String email, String userPassword) {
+    public Users(){}
+
+    public Users(Integer id, String email, String userPassword) {
         this.id = id;
         this.email = email;
         this.userPassword = userPassword;
@@ -58,11 +58,11 @@ class User {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof User)) return false;
-        User user = (User) o;
-        return id.equals(user.id) &&
-                email.equals(user.email) &&
-                userPassword.equals(user.userPassword);
+        if (!(o instanceof Users)) return false;
+        Users users = (Users) o;
+        return id.equals(users.id) &&
+                email.equals(users.email) &&
+                userPassword.equals(users.userPassword);
     }
 
     @Override

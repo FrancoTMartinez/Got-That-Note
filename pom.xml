@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.example</groupId>
+    <groupId>com.martinezsoft</groupId>
     <artifactId>Got_That</artifactId>
     <version>1.0-SNAPSHOT</version>
 
@@ -14,17 +14,11 @@
         <version>2.3.0.RELEASE</version>
     </parent>
     <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
-        <java.version>11</java.version>
         <hibernate-core>5.4.21.Final</hibernate-core>
         <spring-boot-starter-web>2.3.3.RELEASE</spring-boot-starter-web>
         <spring-boot-starter-test>2.3.3.RELEASE</spring-boot-starter-test>
-        <spring-data-jpa>2.3.3.RELEASE</spring-data-jpa>
         <mysql-connector-java>8.0.20</mysql-connector-java>
-        <spring-boot-starter-data-mongodb>2.3.3.RELEASE</spring-boot-starter-data-mongodb>
-        <maven-compiler-plugin>3.8.1</maven-compiler-plugin>
+        <spring-boot-starter-data-mongodb>2.5.1</spring-boot-starter-data-mongodb>
     </properties>
 
     <dependencies>
@@ -45,11 +39,6 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.springframework.data</groupId>
-            <artifactId>spring-data-jpa</artifactId>
-            <version>${spring-data-jpa}</version>
-        </dependency>
-        <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>${mysql-connector-java}</version>
@@ -60,10 +49,30 @@
             <version>${spring-boot-starter-data-mongodb}</version>
         </dependency>
         <dependency>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-compiler-plugin</artifactId>
-            <version>${maven-compiler-plugin}</version>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.5</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
-
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>11</source>
+                    <target>11</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
