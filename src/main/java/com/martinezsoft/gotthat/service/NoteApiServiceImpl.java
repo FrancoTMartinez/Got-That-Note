@@ -24,8 +24,12 @@ public class NoteApiServiceImpl{
     @PostMapping(value = "/add", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     ResponseEntity<Notes> addNote(@RequestBody Notes notes) {
        try{
-           noteApiService.save(notes);
-           return ResponseEntity.status(HttpStatus.CREATED).body(notes);
+           if(notes.getUserId()!=null){ //Valido que el id del usuario que viene de jSon sea !=NULL
+               noteApiService.save(notes);
+               return ResponseEntity.status(HttpStatus.CREATED).body(notes);
+           }else{
+               return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+           }
        }catch (EntityNotFoundException e){
            throw new EntityNotFoundException(e.getMessage());
        }
@@ -35,7 +39,7 @@ public class NoteApiServiceImpl{
     ResponseEntity<List<Notes>> searchNotes() {
         try{
             List<Notes> notesList= new ArrayList<Notes>();
-            noteApiService.findAll().forEach(notesList::add); //preguntar lo de los dos puntitos
+            noteApiService.findAll().forEach(notesList::add);
             if(notesList.isEmpty()){
                 return ResponseEntity.status(HttpStatus.NO_CONTENT).body(notesList);
             }
@@ -48,8 +52,7 @@ public class NoteApiServiceImpl{
     @GetMapping(value = "/get/{idNote}", produces = APPLICATION_JSON_VALUE)
     ResponseEntity<Notes> lookup(@PathVariable Integer id) {
         String idNoteStr= String.valueOf(id);
-        Optional<Notes> notesId= noteApiService.findById(idNoteStr); //preguntar Optional porque? puede o no contener un null?
-
+        Optional<Notes> notesId= noteApiService.findById(idNoteStr);
         if(notesId.isPresent()){
             return ResponseEntity.status(HttpStatus.OK).body(notesId.get());
         }else{
