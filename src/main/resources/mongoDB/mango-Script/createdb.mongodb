@@ -1,0 +1,2 @@
+use note;
+db.note.insert({"noteId":1,"userId":1,"title":"Admin","text":"Admin text"});

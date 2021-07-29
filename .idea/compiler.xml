@@ -8,6 +8,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="Got That" />
         <module name="Got-That-Note" />
+        <module name="Got_That" />
       </profile>
     </annotationProcessing>
   </component>
@@ -15,6 +16,7 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="Got That" options="-parameters" />
       <module name="Got-That-Note" options="-parameters" />
+      <module name="Got_That" options="-parameters" />
     </option>
   </component>
 </project>

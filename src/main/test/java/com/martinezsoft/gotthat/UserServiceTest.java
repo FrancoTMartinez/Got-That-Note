@@ -25,7 +25,6 @@ import static org.mockito.Mockito.when;
 @SpringBootTest(classes = GotThatApp.class)
 @AutoConfigureMockMvc
 public class UserServiceTest {
-
     @MockBean
     private UserApiServiceImpl userApiServiceImpl;
 
@@ -33,9 +32,7 @@ public class UserServiceTest {
     private MockMvc mvc;
 
     @Test
-    public void whenPostingAUserShouldReturnAccepted() throws Exception{
-        /*Path file = Paths.get("userExample.json");
-        String body = Files.readString(file);*/
+    public void whenPostingAUserShouldReturnAccepted() throws Exception {
         File file = ResourceUtils.getFile("classpath:userExample.json");
         String body = FileUtils.readFileToString(file);
 
@@ -43,12 +40,12 @@ public class UserServiceTest {
         users.setid(1);
         users.setEmail("test@test");
         users.setUserPassword("test123");
-        ResponseEntity <Users> usersResponse = new ResponseEntity<Users>(users, HttpStatus.ACCEPTED);
+        ResponseEntity<Users> usersResponse = new ResponseEntity<Users>(users, HttpStatus.ACCEPTED);
 
         when(userApiServiceImpl.add(users)).thenReturn(usersResponse);
 
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post("/services/user/add").contentType(MediaType.APPLICATION_JSON).content(body)
-        .accept(MediaType.APPLICATION_JSON)).andExpect(MockMvcResultMatchers.status().isOk()).andReturn();
+                .accept(MediaType.APPLICATION_JSON)).andExpect(MockMvcResultMatchers.status().isOk()).andReturn();
 
         assertEquals(HttpStatus.OK.value(), mvcResult.getResponse().getStatus());
     }
