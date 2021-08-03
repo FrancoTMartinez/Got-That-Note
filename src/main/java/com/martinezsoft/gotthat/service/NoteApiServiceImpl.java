@@ -14,7 +14,6 @@ import java.util.Optional;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:28017")
 @RequestMapping(value = "/services/notes")
 public class NoteApiServiceImpl{
 

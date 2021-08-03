@@ -13,7 +13,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public interface UserService {
 
     @GetMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
-    ResponseEntity<Users> lookUp(@PathVariable Integer id); //all users
+    ResponseEntity<Users> lookUp(@PathVariable Integer id);
 
     @GetMapping(produces = APPLICATION_JSON_VALUE)
     ResponseEntity<List<Users>> search();

@@ -49,10 +49,14 @@ public class UserApiServiceImpl implements UserService {
 
     @Override
     public ResponseEntity<Users> add(Users users) {
-        userSession.beginTransaction();
-        userSession.save(users);
-        userSession.getTransaction().commit();
-        return ResponseEntity.status(HttpStatus.OK).body(users);
+        if(users.getid()!=null){
+            userSession.beginTransaction();
+            userSession.save(users);
+            userSession.getTransaction().commit();
+            return ResponseEntity.status(HttpStatus.OK).body(users);
+        }else{
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
     }
 
     @Override

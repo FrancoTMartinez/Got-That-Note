@@ -1,5 +1,4 @@
-package com.martinezsoft.gotthat;
-
+import com.martinezsoft.gotthat.GotThatApp;
 import com.martinezsoft.gotthat.model.Users;
 import com.martinezsoft.gotthat.service.UserApiServiceImpl;
 import org.apache.commons.io.FileUtils;
