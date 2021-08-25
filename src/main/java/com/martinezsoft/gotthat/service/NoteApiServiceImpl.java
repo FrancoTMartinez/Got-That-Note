@@ -22,8 +22,9 @@ public class NoteApiServiceImpl{
 
     @PostMapping(value = "/add", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     ResponseEntity<Notes> addNote(@RequestBody Notes notes) {
+        //cambiar tipo de dato del id
        try{
-           if(notes.getUserId()!=null){ //Valido que el id del usuario que viene de jSon sea !=NULL
+           if(notes.getUserId()!=null){
                noteApiService.save(notes);
                return ResponseEntity.status(HttpStatus.CREATED).body(notes);
            }else{
@@ -36,12 +37,14 @@ public class NoteApiServiceImpl{
 
     @GetMapping(produces = APPLICATION_JSON_VALUE)
     ResponseEntity<List<Notes>> searchNotes() {
+
+        //ver querys, agregar properties(ver cual) para que me muestre la query que esta pasando
+        //hacer un debugg con una nueva configuracion remote jmv, poner breakpoint en findall y en la query
+
         try{
             List<Notes> notesList= new ArrayList<Notes>();
-            noteApiService.findAll().forEach(notesList::add);
-            if(notesList.isEmpty()){
-                return ResponseEntity.status(HttpStatus.NO_CONTENT).body(notesList);
-            }
+            notesList= noteApiService.findAll();
+
             return ResponseEntity.status(HttpStatus.OK).body(notesList);
         }catch (EntityNotFoundException e){
             throw new EntityNotFoundException(e.getMessage());

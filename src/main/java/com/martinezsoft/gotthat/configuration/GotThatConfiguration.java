@@ -16,10 +16,6 @@ public class GotThatConfiguration {
     @RequestScope
     public UserApiServiceImpl userApiServiceImpl() throws Exception {return new UserApiServiceImpl(hibernateSessionFactory());}
 
-    //@Bean
-    //@RequestScope
-    //public NoteApiServiceImpl noteApiServiceImpl() throws Exception {return new NoteApiServiceImpl(hibernateSessionFactory());}
-
     @Bean
     public HibernateSessionFactory hibernateSessionFactory(){return new HibernateSessionFactory();}
 
