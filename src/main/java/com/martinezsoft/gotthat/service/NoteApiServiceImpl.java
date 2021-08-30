@@ -7,7 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,7 +21,6 @@ public class NoteApiServiceImpl{
 
     @PostMapping(value = "/add", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     ResponseEntity<Notes> addNote(@RequestBody Notes notes) {
-        //cambiar tipo de dato del id
        try{
            if(notes.getUserId()!=null){
                noteApiService.save(notes);
@@ -37,12 +35,8 @@ public class NoteApiServiceImpl{
 
     @GetMapping(produces = APPLICATION_JSON_VALUE)
     ResponseEntity<List<Notes>> searchNotes() {
-
-        //ver querys, agregar properties(ver cual) para que me muestre la query que esta pasando
-        //hacer un debugg con una nueva configuracion remote jmv, poner breakpoint en findall y en la query
-
         try{
-            List<Notes> notesList= new ArrayList<Notes>();
+            List<Notes> notesList;
             notesList= noteApiService.findAll();
 
             return ResponseEntity.status(HttpStatus.OK).body(notesList);
@@ -51,10 +45,9 @@ public class NoteApiServiceImpl{
         }
     }
 
-    @GetMapping(value = "/get/{idNote}", produces = APPLICATION_JSON_VALUE)
-    ResponseEntity<Notes> lookup(@PathVariable Integer id) {
-        String idNoteStr= String.valueOf(id);
-        Optional<Notes> notesId= noteApiService.findById(idNoteStr);
+    @GetMapping(value = "/get/{UserId}", produces = APPLICATION_JSON_VALUE)
+    ResponseEntity<Notes> lookup(@PathVariable String UserId) {
+        Optional<Notes> notesId= noteApiService.findById(UserId);
         if(notesId.isPresent()){
             return ResponseEntity.status(HttpStatus.OK).body(notesId.get());
         }else{
@@ -63,9 +56,8 @@ public class NoteApiServiceImpl{
     }
 
     @PutMapping(value = "/update", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
-    ResponseEntity<Notes> updateNote(@PathVariable Integer id, @RequestBody Notes notes) {
-        String idNoteStr= String.valueOf(id);
-        Optional<Notes> notesId= noteApiService.findById(idNoteStr);
+    ResponseEntity<Notes> updateNote(@PathVariable String id, @RequestBody Notes notes) {
+        Optional<Notes> notesId= noteApiService.findById(id);
 
         if(notesId.isPresent()){
             Notes noteToUpdate = notesId.get();
@@ -82,14 +74,13 @@ public class NoteApiServiceImpl{
 
     //after make deleted by date created dd/hh/ss
     @DeleteMapping(value = "/delete/{id}", produces = APPLICATION_JSON_VALUE)
-    ResponseEntity<String> deleteNote(@PathVariable Integer id) {
+    ResponseEntity<String> deleteNote(@PathVariable String id) {
 
-        String idNoteStr= String.valueOf(id);
-        Optional<Notes> notesId= noteApiService.findById(idNoteStr);
+        Optional<Notes> notesId= noteApiService.findById(id);
 
         if(notesId.isPresent()){
 
-            noteApiService.deleteById(idNoteStr);
+            noteApiService.deleteById(id);
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
 
         }else{

@@ -10,12 +10,13 @@ import java.util.Objects;
 @Document(collection = "Notes")
 public class Notes {
 
+
     @JsonProperty("id")
     @Id
-    public Integer id= null;
+    public String id= null;
 
     @JsonProperty("userId")
-    public Integer userId= null;
+    public String userId= null;
 
     @JsonProperty("title")
     private String title;
@@ -24,11 +25,11 @@ public class Notes {
     private String text;
 
 
-    public Integer getid() {
+    public String getId() {
         return id;
     }
 
-    public void setid(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -48,26 +49,34 @@ public class Notes {
         this.text = text;
     }
 
-
-    public Integer getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(Integer userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 
     public Notes(){}
 
-    public Notes(Integer id, String title, String text) {
+    public Notes(String id, String userId, String title, String text) {
         this.id = id;
+        this.userId = userId;
         this.title = title;
         this.text = text;
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Notes notes = (Notes) o;
+        return id.equals(notes.id) && userId.equals(notes.userId) && title.equals(notes.title) && text.equals(notes.text);
+    }
+
+    @Override
     public int hashCode() {
-        return Objects.hash(getid(), getTitle(), getText());
+        return Objects.hash(id, userId, title, text);
     }
 
     @Override
@@ -79,18 +88,5 @@ public class Notes {
                 ", text='" + text + '\'' +
                 '}';
     }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Notes notes = (Notes) o;
-        return id.equals(notes.id) &&
-                userId.equals(notes.userId) &&
-                title.equals(notes.title) &&
-                text.equals(notes.text);
-    }
-
-
 
 }
