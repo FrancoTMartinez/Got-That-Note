@@ -13,10 +13,10 @@ public class Notes {
 
     @JsonProperty("id")
     @Id
-    public String id= null;
+    private String id= null;
 
     @JsonProperty("userId")
-    public String userId= null;
+    private String userId= null;
 
     @JsonProperty("title")
     private String title;

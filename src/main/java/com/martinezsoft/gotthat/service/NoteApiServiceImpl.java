@@ -5,8 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import javax.persistence.EntityNotFoundException;
+import java.sql.*;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,9 +20,9 @@ public class NoteApiServiceImpl{
     NoteApiService noteApiService;
 
     @PostMapping(value = "/add", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
-    ResponseEntity<Notes> addNote(@RequestBody Notes notes) {
+    public ResponseEntity<Notes> addNote(@RequestBody Notes notes){
        try{
-           if(notes.getUserId()!=null){
+           if(notes.getUserId() != null){
                noteApiService.save(notes);
                return ResponseEntity.status(HttpStatus.CREATED).body(notes);
            }else{
@@ -34,7 +34,7 @@ public class NoteApiServiceImpl{
     }
 
     @GetMapping(produces = APPLICATION_JSON_VALUE)
-    ResponseEntity<List<Notes>> searchNotes() {
+    public ResponseEntity<List<Notes>> searchNotes() {
         try{
             List<Notes> notesList;
             notesList= noteApiService.findAll();
@@ -46,7 +46,7 @@ public class NoteApiServiceImpl{
     }
 
     @GetMapping(value = "/get/{UserId}", produces = APPLICATION_JSON_VALUE)
-    ResponseEntity<Notes> lookup(@PathVariable String UserId) {
+    public ResponseEntity<Notes> lookup(@PathVariable String UserId) {
         Optional<Notes> notesId= noteApiService.findById(UserId);
         if(notesId.isPresent()){
             return ResponseEntity.status(HttpStatus.OK).body(notesId.get());
@@ -56,7 +56,7 @@ public class NoteApiServiceImpl{
     }
 
     @PutMapping(value = "/update", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
-    ResponseEntity<Notes> updateNote(@PathVariable String id, @RequestBody Notes notes) {
+    public ResponseEntity<Notes> updateNote(@PathVariable String id, @RequestBody Notes notes) {
         Optional<Notes> notesId= noteApiService.findById(id);
 
         if(notesId.isPresent()){
@@ -74,7 +74,7 @@ public class NoteApiServiceImpl{
 
     //after make deleted by date created dd/hh/ss
     @DeleteMapping(value = "/delete/{id}", produces = APPLICATION_JSON_VALUE)
-    ResponseEntity<String> deleteNote(@PathVariable String id) {
+    public ResponseEntity<String> deleteNote(@PathVariable String id) {
 
         Optional<Notes> notesId= noteApiService.findById(id);
 

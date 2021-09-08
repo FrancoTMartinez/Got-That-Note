@@ -17,11 +17,14 @@
         <hibernate-core>5.4.21.Final</hibernate-core>
         <spring-boot-starter-web>2.3.3.RELEASE</spring-boot-starter-web>
         <spring-boot-starter-test>2.3.3.RELEASE</spring-boot-starter-test>
+        <spring-web-version>5.2.6.RELEASE</spring-web-version>
         <mysql-connector-java>8.0.20</mysql-connector-java>
         <spring-boot-starter-data-mongodb>2.5.1</spring-boot-starter-data-mongodb>
         <springboot-test-version>2.2.6.RELEASE</springboot-test-version>
         <springboot-test-autoconfigure-version>2.2.6.RELEASE</springboot-test-autoconfigure-version>
         <spring-test-version>5.2.5.RELEASE</spring-test-version>
+        <swagger-annotations-version>2.1.1</swagger-annotations-version>
+        <openapi-doc-version>1.2.32</openapi-doc-version>
     </properties>
 
     <dependencies>
@@ -40,6 +43,11 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <version>${spring-boot-starter-test}</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <version>${spring-web-version}</version>
         </dependency>
         <dependency>
             <groupId>mysql</groupId>
@@ -79,6 +87,16 @@
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.swagger.core.v3</groupId>
+            <artifactId>swagger-annotations</artifactId>
+            <version>${swagger-annotations-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
+            <version>${openapi-doc-version}</version>
         </dependency>
     </dependencies>
     <build>

@@ -20,7 +20,7 @@ public class UserApiServiceImpl implements UserService {
         userSession = hibernateSessionFactory.buildSession();
     }
 
-    private Users userReturnedFromDataBase (Integer id){
+    public Users userReturnedFromDataBase (Integer id){
         Users usersReturned;
         try{
             userSession.beginTransaction();
@@ -53,7 +53,7 @@ public class UserApiServiceImpl implements UserService {
             userSession.beginTransaction();
             userSession.save(users);
             userSession.getTransaction().commit();
-            return ResponseEntity.status(HttpStatus.OK).body(users);
+            return ResponseEntity.status(HttpStatus.CREATED).body(users);
         }else{
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
