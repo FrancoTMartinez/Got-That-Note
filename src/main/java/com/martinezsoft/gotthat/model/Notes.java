@@ -13,16 +13,19 @@ public class Notes {
 
     @JsonProperty("id")
     @Id
-    private String id= null;
+    private String id;
 
     @JsonProperty("userId")
-    private String userId= null;
+    private String userId;
 
     @JsonProperty("title")
     private String title;
 
     @JsonProperty("text")
     private String text;
+
+    @JsonProperty("favorite")
+    private boolean favorite;
 
 
     public String getId() {
@@ -57,13 +60,21 @@ public class Notes {
         this.userId = userId;
     }
 
+    public void setFavorite(boolean favorite) {
+        this.favorite = favorite;
+    }
+    public boolean isFavorite() {
+        return favorite;
+    }
+
     public Notes(){}
 
-    public Notes(String id, String userId, String title, String text) {
+    public Notes(String id, String userId, String title, String text, boolean favorite) {
         this.id = id;
         this.userId = userId;
         this.title = title;
         this.text = text;
+        this.favorite=favorite;
     }
 
     @Override
@@ -76,7 +87,7 @@ public class Notes {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, userId, title, text);
+        return Objects.hash(id, userId, title, text, favorite);
     }
 
     @Override
@@ -86,7 +97,11 @@ public class Notes {
                 ", userId='" + userId + '\'' +
                 ", title='" + title + '\'' +
                 ", text='" + text + '\'' +
+                ", favorite='" + favorite + '\'' +
                 '}';
     }
+
+
+
 
 }

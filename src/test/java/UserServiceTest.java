@@ -2,6 +2,7 @@ import com.martinezsoft.gotthat.GotThatApp;
 import com.martinezsoft.gotthat.model.Users;
 import com.martinezsoft.gotthat.service.UserApiServiceImpl;
 import org.apache.commons.io.FileUtils;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -20,9 +21,10 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
+
+
 @SpringBootTest(classes = GotThatApp.class)
 @AutoConfigureMockMvc
 public class UserServiceTest {
@@ -33,7 +35,7 @@ public class UserServiceTest {
     private MockMvc mvc;
 
     @Test
-    public void whenPostingAnUserShouldReturnAccepted() throws Exception {
+    public void whenPostingAnUserShouldReturnCreated() throws Exception {
         File file = ResourceUtils.getFile("classpath:userExample.json");
         String body = FileUtils.readFileToString(file);
 
@@ -41,14 +43,32 @@ public class UserServiceTest {
         users.setid(1);
         users.setEmail("test@test");
         users.setUserPassword("test123");
-        ResponseEntity<Users> usersResponse = new ResponseEntity<Users>(users, HttpStatus.ACCEPTED);
+        ResponseEntity<Users> usersResponse = new ResponseEntity<Users>(users, HttpStatus.CREATED);
 
         when(userApiServiceImpl.add(users)).thenReturn(usersResponse);
 
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post("/services/user/add").contentType(MediaType.APPLICATION_JSON).content(body)
-                .accept(MediaType.APPLICATION_JSON)).andExpect(MockMvcResultMatchers.status().isOk()).andReturn();
+                .accept(MediaType.APPLICATION_JSON)).andExpect(MockMvcResultMatchers.status().isCreated()).andReturn();
 
-        assertEquals(HttpStatus.OK.value(), mvcResult.getResponse().getStatus());
+        assertEquals(HttpStatus.CREATED.value(), mvcResult.getResponse().getStatus());
+    }
+    @Test
+    public void whenPostingAnUserShouldReturnBadRequest() throws Exception {
+        File file = ResourceUtils.getFile("classpath:invalidUserExample.json");
+        String body = FileUtils.readFileToString(file);
+
+        Users users = new Users();
+        users.setid(1);
+        users.setEmail(null);
+        users.setUserPassword(null);
+        ResponseEntity<Users> usersResponse = new ResponseEntity<Users>(users, HttpStatus.BAD_REQUEST);
+
+        when(userApiServiceImpl.add(users)).thenReturn(usersResponse);
+
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post("/services/user/add").contentType(MediaType.APPLICATION_JSON).content(body)
+                .accept(MediaType.APPLICATION_JSON)).andExpect(MockMvcResultMatchers.status().isBadRequest()).andReturn();
+
+        assertEquals(HttpStatus.BAD_REQUEST.value(), mvcResult.getResponse().getStatus());
     }
 
     @Test
@@ -69,6 +89,25 @@ public class UserServiceTest {
                 .accept(MediaType.APPLICATION_JSON)).andExpect(MockMvcResultMatchers.status().isOk()).andReturn();
 
         assertEquals(HttpStatus.OK.value(), mvcResult.getResponse().getStatus());
+    }
+    @Test
+    public void whenUpdatingAnUserShouldReturnBadRequest() throws Exception {
+        File file = ResourceUtils.getFile("classpath:invalidUserExample.json");
+        String body = FileUtils.readFileToString(file);
+
+        Users users = new Users();
+        users.setid(1);
+        users.setEmail(null);
+        users.setUserPassword(null);
+
+        ResponseEntity<Users> usersResponse = new ResponseEntity<Users>(users, HttpStatus.BAD_REQUEST);
+
+        when(userApiServiceImpl.update(users.getid(),users)).thenReturn(usersResponse);
+
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.put("/services/user/update/1").contentType(MediaType.APPLICATION_JSON).content(body)
+                .accept(MediaType.APPLICATION_JSON)).andExpect(MockMvcResultMatchers.status().isBadRequest()).andReturn();
+
+        assertEquals(HttpStatus.BAD_REQUEST.value(), mvcResult.getResponse().getStatus());
     }
     @Test
     public void whenLookUpUserShouldReturnOk() throws Exception {

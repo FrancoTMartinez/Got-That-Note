@@ -2,11 +2,11 @@ package com.martinezsoft.gotthat.service;
 
 import com.martinezsoft.gotthat.database.HibernateSessionFactory;
 import com.martinezsoft.gotthat.model.Users;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
@@ -49,7 +49,7 @@ public class UserApiServiceImpl implements UserService {
 
     @Override
     public ResponseEntity<Users> add(Users users) {
-        if(users.getid()!=null){
+        if(users.getEmail() != null && users.getUserPassword() != null){
             userSession.beginTransaction();
             userSession.save(users);
             userSession.getTransaction().commit();
@@ -62,11 +62,15 @@ public class UserApiServiceImpl implements UserService {
     @Override
     public ResponseEntity<Users> update(Integer id, Users users) {
         Users usersReturned = userReturnedFromDataBase(id);
-        usersReturned.setEmail(users.getEmail());
-        usersReturned.setUserPassword(users.getUserPassword());
-        userSession.update(users);
-        userSession.getTransaction().commit();
-        return ResponseEntity.status(HttpStatus.OK).body(usersReturned);
+        if(users.getEmail() != null && users.getUserPassword() != null){
+            usersReturned.setEmail(users.getEmail());
+            usersReturned.setUserPassword(users.getUserPassword());
+            userSession.update(users);
+            userSession.getTransaction().commit();
+            return ResponseEntity.status(HttpStatus.OK).body(usersReturned);
+        }else{
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
     }
 
     @Override

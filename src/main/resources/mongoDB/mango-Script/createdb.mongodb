@@ -1,2 +1,2 @@
 use Notes;
-db.Notes.insert({"userId":"1","title":"Admin","text":"Admin text"});
+db.Notes.insert({"userId":"1","title":"Admin","text":"Admin text","favorite":"false"});

@@ -2,10 +2,7 @@ package com.martinezsoft.gotthat.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
@@ -13,15 +10,17 @@ import java.util.Objects;
 public class Users {
     @JsonProperty("id")
     @Id
-    private Integer id = null;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "Id", nullable = false, unique = true)
+    private Integer id;
 
     @JsonProperty("email")
     @Column(name = "EMAIL")
-    private String email = null;
+    private String email;
 
     @JsonProperty("password")
     @Column(name = "USER_PASSWORD")
-    private String userPassword = null;
+    private String userPassword;
 
     public Integer getid() {
         return id;

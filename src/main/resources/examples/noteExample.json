@@ -1,5 +1,6 @@
 {
     "userId" : "1",
     "title":"Test TITLE",
-    "text":"test Text 123"
+    "text":"test Text 123",
+    "favorite":false
 }

@@ -1,12 +1,17 @@
 package com.martinezsoft.gotthat.service;
 
 import com.martinezsoft.gotthat.model.Notes;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import javax.persistence.EntityNotFoundException;
-import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,6 +24,14 @@ public class NoteApiServiceImpl{
     @Autowired
     NoteApiService noteApiService;
 
+    @Operation(summary = "Add Notes to the database")
+    @ApiResponses(value={
+            @ApiResponse(responseCode = "201", description = "Note successfully added",
+                    content ={@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Notes.class))}),
+            @ApiResponse(responseCode = "400", description = "Invalid body applied",
+                    content= @Content)
+    })
     @PostMapping(value = "/add", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<Notes> addNote(@RequestBody Notes notes){
        try{
@@ -33,6 +46,12 @@ public class NoteApiServiceImpl{
        }
     }
 
+    @Operation(summary = "Search for all notes on the database")
+    @ApiResponses(value={
+            @ApiResponse(responseCode = "200", description = "Notes found",
+                    content ={@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Notes.class))}),
+    })
     @GetMapping(produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Notes>> searchNotes() {
         try{
@@ -45,9 +64,44 @@ public class NoteApiServiceImpl{
         }
     }
 
-    @GetMapping(value = "/get/{UserId}", produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<Notes> lookup(@PathVariable String UserId) {
-        Optional<Notes> notesId= noteApiService.findById(UserId);
+    @Operation(summary = "Search for all notes of one UserId on the database")
+    @ApiResponses(value={
+            @ApiResponse(responseCode = "200", description = "Notes found",
+                    content ={@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Notes.class))}),
+    })
+    @GetMapping(value="/user/{id}",produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<Notes>> searchNotesByUserId(@PathVariable String id) {
+        try{
+            List<Notes> notesList=noteApiService.findAll();
+            ArrayList<Notes> listReturn = new ArrayList<>();
+
+            for (Notes element: notesList) {
+                if(element.getUserId().equals(id)){
+                    listReturn.add(element);
+                }
+            }
+
+            if(listReturn.isEmpty()){
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            }else{
+                return ResponseEntity.status(HttpStatus.OK).body(listReturn);
+            }
+
+        }catch (EntityNotFoundException e){
+            throw new EntityNotFoundException(e.getMessage());
+        }
+    }
+
+    @Operation(summary = "Search a Notes by object id")
+    @ApiResponses(value={
+            @ApiResponse(responseCode = "200", description = "Notes found",
+                    content ={@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Notes.class))}),
+    })
+    @GetMapping(value = "/get/{id}", produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<Notes> lookup(@PathVariable String id) {
+        Optional<Notes> notesId= noteApiService.findById(id);
         if(notesId.isPresent()){
             return ResponseEntity.status(HttpStatus.OK).body(notesId.get());
         }else{
@@ -55,7 +109,13 @@ public class NoteApiServiceImpl{
         }
     }
 
-    @PutMapping(value = "/update", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+    @Operation(summary = "Updates Note data finding it by Object id")
+    @ApiResponses(value={
+            @ApiResponse(responseCode = "200", description = "Note updated",
+                    content ={@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Notes.class))}),
+    })
+    @PutMapping(value = "/update/{id}", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<Notes> updateNote(@PathVariable String id, @RequestBody Notes notes) {
         Optional<Notes> notesId= noteApiService.findById(id);
 
@@ -63,6 +123,7 @@ public class NoteApiServiceImpl{
             Notes noteToUpdate = notesId.get();
             noteToUpdate.setText(notes.getText());
             noteToUpdate.setTitle(notes.getTitle());
+            noteToUpdate.setFavorite(notes.isFavorite());
 
             noteApiService.save(noteToUpdate);
             return ResponseEntity.status(HttpStatus.CREATED).body(noteToUpdate);
@@ -72,7 +133,12 @@ public class NoteApiServiceImpl{
         }
     }
 
-    //after make deleted by date created dd/hh/ss
+    @Operation(summary = "Delete note data finding it by object id")
+    @ApiResponses(value={
+            @ApiResponse(responseCode = "200", description = "Note found",
+                    content ={@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Notes.class))}),
+    })
     @DeleteMapping(value = "/delete/{id}", produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<String> deleteNote(@PathVariable String id) {
 
@@ -82,6 +148,57 @@ public class NoteApiServiceImpl{
 
             noteApiService.deleteById(id);
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+
+        }else{
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+
+    @Operation(summary = "Set or disable favorite from an specific note")
+    @ApiResponses(value={
+            @ApiResponse(responseCode = "200", description = "Note found",
+                    content ={@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Notes.class))}),
+    })
+    @GetMapping(value = "/favorite/{id}", produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> favoriteNote(@PathVariable String id) {
+
+        Optional<Notes> noteToUpdate= noteApiService.findById(id);
+
+        if(noteToUpdate.isPresent()){
+            Notes note = noteToUpdate.get();
+            if(note.isFavorite()){
+                note.setFavorite(false);
+            }else{
+                note.setFavorite(true);
+            }
+
+            noteApiService.save(note);
+            return ResponseEntity.status(HttpStatus.OK).body(null);
+
+        }else{
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+
+    @Operation(summary = "Return all notes that are marked like favorite")
+    @ApiResponses(value={
+            @ApiResponse(responseCode = "200", description = "Note found",
+                    content ={@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Notes.class))}),
+    })
+    @GetMapping(value = "/user/{id}/favorites", produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<Notes>> FindAllFavoritesNotes(@PathVariable String id) {
+        List<Notes> notesList= noteApiService.findAll();
+        ArrayList<Notes> notesToReturn = new ArrayList<>();
+
+        if(!notesList.isEmpty()){
+            for (Notes note: notesList) {
+               if( note.getUserId().equals(id) && note.isFavorite()){
+                   notesToReturn.add(note);
+               }
+            }
+            return ResponseEntity.status(HttpStatus.OK).body(notesToReturn);
 
         }else{
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
