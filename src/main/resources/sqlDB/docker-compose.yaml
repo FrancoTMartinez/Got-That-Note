@@ -10,8 +10,6 @@ services:
     ports:
       - '3306:3306'
     volumes:
-      - ./sql-script/createDb.sql:/docker-entrypoint-initdb.d/createDb.sql
+      - ./sql-script/createDb.sql:/opt/got-that-note-db
     expose:
       - '3306'
-volumes:
-  got-that-note-db:
