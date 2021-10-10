@@ -1,3 +1,0 @@
-build:
-  docker: null
-  web: src/main/resources/sqlDB/docker-compose.yaml
