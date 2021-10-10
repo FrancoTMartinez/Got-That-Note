@@ -6,5 +6,5 @@ COPY src ./src
 RUN mvn clean install -DskipTests
 
 FROM openjdk:8-jre-alpine
-COPY --from=builder /Got-That-Note/target/Got_That-1.0-SNAPSHOT.jar
+COPY --from=builder /Got-That-Note/target/Got_That-1.0-SNAPSHOT.jar /
 CMD ["java","-jar", "Got_That-1.0-SNAPSHOT.jar"]
