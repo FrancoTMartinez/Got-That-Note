@@ -4,4 +4,3 @@ COPY pom.xml .
 RUN mvn -e -B dependency:resolve
 COPY src ./src
 RUN mvn clean install -DskipTests
-CMD ["java","-jar","Got_That-1.0-SNAPSHOT.jar"]
