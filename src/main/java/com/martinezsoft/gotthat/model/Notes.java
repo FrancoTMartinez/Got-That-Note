@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Objects;
 
 
@@ -26,6 +28,9 @@ public class Notes {
 
     @JsonProperty("favorite")
     private boolean favorite;
+
+    @JsonProperty("creationDate")
+    private LocalDate date;
 
 
     public String getId() {
@@ -67,14 +72,19 @@ public class Notes {
         return favorite;
     }
 
+    public LocalDate getDate() {return date;}
+
+    public void setDate(LocalDate date) {this.date = date;}
+
     public Notes(){}
 
-    public Notes(String id, String userId, String title, String text, boolean favorite) {
+    public Notes(String id, String userId, String title, String text, boolean favorite, LocalDate date) {
         this.id = id;
         this.userId = userId;
         this.title = title;
         this.text = text;
         this.favorite=favorite;
+        this.date=date;
     }
 
     @Override
@@ -82,12 +92,12 @@ public class Notes {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Notes notes = (Notes) o;
-        return id.equals(notes.id) && userId.equals(notes.userId) && title.equals(notes.title) && text.equals(notes.text);
+        return id.equals(notes.id) && userId.equals(notes.userId) && title.equals(notes.title) && text.equals(notes.text) && date.equals(notes.date);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, userId, title, text, favorite);
+        return Objects.hash(id, userId, title, text, favorite, date);
     }
 
     @Override
@@ -98,10 +108,7 @@ public class Notes {
                 ", title='" + title + '\'' +
                 ", text='" + text + '\'' +
                 ", favorite='" + favorite + '\'' +
+                ", date=' "+ date + '\'' +
                 '}';
     }
-
-
-
-
 }

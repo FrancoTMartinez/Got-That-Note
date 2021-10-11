@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import javax.persistence.EntityNotFoundException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -73,19 +74,12 @@ public class NoteApiServiceImpl{
     @GetMapping(value="/user/{id}",produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Notes>> searchNotesByUserId(@PathVariable String id) {
         try{
-            List<Notes> notesList=noteApiService.findAll();
-            ArrayList<Notes> listReturn = new ArrayList<>();
+            List<Notes> notesList=noteApiService.GetAllNotesByUserId(id);
 
-            for (Notes element: notesList) {
-                if(element.getUserId().equals(id)){
-                    listReturn.add(element);
-                }
-            }
-
-            if(listReturn.isEmpty()){
+            if(notesList.isEmpty()){
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
             }else{
-                return ResponseEntity.status(HttpStatus.OK).body(listReturn);
+                return ResponseEntity.status(HttpStatus.OK).body(notesList);
             }
 
         }catch (EntityNotFoundException e){
@@ -162,26 +156,31 @@ public class NoteApiServiceImpl{
     })
     @GetMapping(value = "/favorite/{id}", produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<String> favoriteNote(@PathVariable String id) {
+        try{
 
-        Optional<Notes> noteToUpdate= noteApiService.findById(id);
+            Optional<Notes> noteToUpdate= noteApiService.findById(id);
 
-        if(noteToUpdate.isPresent()){
-            Notes note = noteToUpdate.get();
-            if(note.isFavorite()){
-                note.setFavorite(false);
+            if(noteToUpdate.isPresent()){
+                Notes note = noteToUpdate.get();
+                if(note.isFavorite()){
+                    note.setFavorite(false);
+                }else{
+                    note.setFavorite(true);
+                }
+
+                noteApiService.save(note);
+                return ResponseEntity.status(HttpStatus.OK).body(null);
+
             }else{
-                note.setFavorite(true);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
             }
 
-            noteApiService.save(note);
-            return ResponseEntity.status(HttpStatus.OK).body(null);
-
-        }else{
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }catch (EntityNotFoundException e){
+            throw new EntityNotFoundException(e.getMessage());
         }
     }
 
-    @Operation(summary = "Return all notes that are marked like favorite")
+    @Operation(summary = "Return all notes of the user that are marked like favorite")
     @ApiResponses(value={
             @ApiResponse(responseCode = "200", description = "Note found",
                     content ={@Content(mediaType = "application/json",
@@ -189,19 +188,39 @@ public class NoteApiServiceImpl{
     })
     @GetMapping(value = "/user/{id}/favorites", produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Notes>> FindAllFavoritesNotes(@PathVariable String id) {
-        List<Notes> notesList= noteApiService.findAll();
-        ArrayList<Notes> notesToReturn = new ArrayList<>();
+        try{
+            List<Notes> notesList= noteApiService.GetAllFavoritesNotesByUserId(id);
 
-        if(!notesList.isEmpty()){
-            for (Notes note: notesList) {
-               if( note.getUserId().equals(id) && note.isFavorite()){
-                   notesToReturn.add(note);
-               }
+            if(notesList.isEmpty()){
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            }else{
+                return ResponseEntity.status(HttpStatus.OK).body(notesList);
             }
-            return ResponseEntity.status(HttpStatus.OK).body(notesToReturn);
 
-        }else{
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }catch (EntityNotFoundException e){
+            throw new EntityNotFoundException(e.getMessage());
+        }
+    }
+    @Operation(summary = "Return all notes of the user that were created on specific date")
+    @ApiResponses(value={
+            @ApiResponse(responseCode = "200", description = "Notes found",
+                    content ={@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Notes.class))}),
+    })
+    @GetMapping(value = "/user/{id}/{date}", produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<Notes>> FindAllCreatedNotes(@PathVariable String id, @PathVariable String date) {
+        try{
+            LocalDate localDate= LocalDate.parse(date);
+            List<Notes> notesList = noteApiService.GetAllNotesByDateTime(id,localDate);
+
+            if(notesList.isEmpty()){
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            }else{
+                return ResponseEntity.status(HttpStatus.OK).body(notesList);
+            }
+
+        }catch (EntityNotFoundException e){
+            throw new EntityNotFoundException(e.getMessage());
         }
     }
 
