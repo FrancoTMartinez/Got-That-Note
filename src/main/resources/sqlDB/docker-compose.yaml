@@ -8,7 +8,7 @@ services:
       MYSQL_PASSWORD: 'password'
       MYSQL_ROOT_PASSWORD: 'password'
     ports:
-      - '3306:3306'
+      - '192.168.0.38:3306:3306'
     volumes:
       - ./sql-script/createDb.sql:/opt/got-that-note-db
     expose:
