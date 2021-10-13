@@ -48,4 +48,3 @@ hs_err_pid*
 # IntelliJ
 out/
 target/
-src/main/resources/mongoDB.properties
