@@ -17,7 +17,6 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RequestMapping(value = "/services/user")
 public interface UserService {
 
-
     @Operation(summary = "Search an User by id")
     @ApiResponses(value={
             @ApiResponse(responseCode = "200", description = "User found",
@@ -59,10 +58,20 @@ public interface UserService {
     @Operation(summary = "Delete User data finding it by id")
     @ApiResponses(value={
             @ApiResponse(responseCode = "200", description = "User found",
+                    content ={@Content(mediaType = "application/json")}),
+    })
+    @GetMapping(value = "/delete/{id}", produces = APPLICATION_JSON_VALUE)
+    ResponseEntity<String> delete(@PathVariable Integer id);
+
+    @Operation(summary = "Consult into dataBase if the user exist")
+    @ApiResponses(value={
+            @ApiResponse(responseCode = "201", description = "User successfully found",
                     content ={@Content(mediaType = "application/json",
                             schema = @Schema(implementation = Users.class))}),
+            @ApiResponse(responseCode = "400", description = "User not found",
+                    content= @Content)
     })
-    @DeleteMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
-    ResponseEntity<String> delete(@PathVariable Integer id);
+    @GetMapping(value = "/logIn/{email}/{password}", produces = APPLICATION_JSON_VALUE)
+    ResponseEntity <Boolean> logIn(@PathVariable("email") String email,@PathVariable("password") String password );
 
 }

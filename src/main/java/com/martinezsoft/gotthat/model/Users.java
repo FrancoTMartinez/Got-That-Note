@@ -11,15 +11,15 @@ public class Users {
     @JsonProperty("id")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "Id", nullable = false, unique = true)
+    @Column(name = "Id",nullable = false ,unique = true)
     private Integer id;
 
     @JsonProperty("email")
-    @Column(name = "EMAIL")
+    @Column(name = "EMAIL",nullable = false, unique = true)
     private String email;
 
     @JsonProperty("password")
-    @Column(name = "USER_PASSWORD")
+    @Column(name = "USER_PASSWORD",nullable = false, unique = true)
     private String userPassword;
 
     public Integer getid() {

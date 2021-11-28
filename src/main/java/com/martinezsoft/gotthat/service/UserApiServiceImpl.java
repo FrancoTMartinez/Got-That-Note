@@ -2,7 +2,6 @@ package com.martinezsoft.gotthat.service;
 
 import com.martinezsoft.gotthat.database.HibernateSessionFactory;
 import com.martinezsoft.gotthat.model.Users;
-import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 import org.springframework.http.HttpStatus;
@@ -65,7 +64,7 @@ public class UserApiServiceImpl implements UserService {
         if(users.getEmail() != null && users.getUserPassword() != null){
             usersReturned.setEmail(users.getEmail());
             usersReturned.setUserPassword(users.getUserPassword());
-            userSession.update(users);
+            userSession.update(usersReturned);
             userSession.getTransaction().commit();
             return ResponseEntity.status(HttpStatus.OK).body(usersReturned);
         }else{
@@ -78,6 +77,23 @@ public class UserApiServiceImpl implements UserService {
         userSession.delete(userReturnedFromDataBase(id));
         userSession.getTransaction().commit();
         return ResponseEntity.status(HttpStatus.OK).body("User deleted");
+    }
+
+    @Override
+    public ResponseEntity<Boolean> logIn(String email, String password) {
+        Users usersReturned;
+
+        userSession.beginTransaction();
+        Query selectQuery = userSession.createQuery("from Users WHERE Email=:paramEmail and USER_PASSWORD=:paramPassword");
+        selectQuery.setParameter("paramEmail", email);
+        selectQuery.setParameter("paramPassword", password);
+        usersReturned = (Users) selectQuery.uniqueResult();
+
+        if(usersReturned != null){
+            return ResponseEntity.status(HttpStatus.OK).body(true);
+        }else{
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(false);
+        }
     }
 
 
