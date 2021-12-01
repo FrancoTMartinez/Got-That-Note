@@ -37,6 +37,7 @@ public class NoteApiServiceImpl{
     public ResponseEntity<Notes> addNote(@RequestBody Notes notes){
        try{
            if(notes.getUserId() != null){
+               notes.setDate(LocalDate.now());
                noteApiService.save(notes);
                return ResponseEntity.status(HttpStatus.CREATED).body(notes);
            }else{
